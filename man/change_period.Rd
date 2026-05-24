@@ -11,8 +11,8 @@ change_period(data, period = "monthly", aggregate_fn = NULL)
 \code{ts}, or a long \code{data.frame} with columns
 \code{Date / Symbol / Column / Value} (the \code{get_stock()} output).}
 
-\item{period}{character. Target period. One of: \code{"daily"},
-\code{"monthly"}, \code{"quarterly"}, \code{"yearly"}. Default: \code{"monthly"}.}
+\item{period}{character. Target period. One of: \code{"monthly"},
+\code{"quarterly"}, \code{"yearly"}. Default: \code{"monthly"}.}
 
 \item{aggregate_fn}{function or character. Optional override. If supplied,
 the same aggregation is applied to every column (any function or string

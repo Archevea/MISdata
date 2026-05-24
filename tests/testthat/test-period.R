@@ -35,9 +35,6 @@ test_that("change_period accepts user-supplied aggregate_fn (NA-aware wrapping)"
 
 test_that("change_period supports monthly/quarterly/yearly periods", {
   d <- make_long_df(symbols = "AAA", columns = "Close", n_days = 400)
-  # NOTE: period = "daily" is accepted by the validation but the underlying
-  # tsbox::ts_frequency call errors on already-daily input
-  # ("Column ... is type 'closure'"). Skipped here as a known limitation.
   for (p in c("monthly", "quarterly", "yearly")) {
     out <- change_period(d, period = p)
     expect_s3_class(out, "data.frame")
@@ -46,6 +43,9 @@ test_that("change_period supports monthly/quarterly/yearly periods", {
 
 test_that("change_period errors on invalid period", {
   d <- make_long_df(symbols = "AAA", columns = "Close", n_days = 30)
+  # "daily" is intentionally not supported (would be a no-op on already-daily
+  # input and the underlying tsbox call fails in that case).
+  expect_error(change_period(d, period = "daily"), "'period' must be one of")
   expect_error(change_period(d, period = "weekly"), "'period' must be one of")
   expect_error(change_period(d, period = "centennial"), "'period' must be one of")
 })

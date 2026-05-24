@@ -30,8 +30,8 @@
 #' @param data Input object. One of: \code{xts}, \code{tsibble}, \code{zoo},
 #'   \code{ts}, or a long \code{data.frame} with columns
 #'   \code{Date / Symbol / Column / Value} (the \code{get_stock()} output).
-#' @param period character. Target period. One of: \code{"daily"},
-#'   \code{"monthly"}, \code{"quarterly"}, \code{"yearly"}. Default: \code{"monthly"}.
+#' @param period character. Target period. One of: \code{"monthly"},
+#'   \code{"quarterly"}, \code{"yearly"}. Default: \code{"monthly"}.
 #' @param aggregate_fn function or character. Optional override. If supplied,
 #'   the same aggregation is applied to every column (any function or string
 #'   accepted by \code{tsbox::ts_frequency()}: \code{"sum"}, \code{"mean"},
@@ -61,7 +61,7 @@
 #' @export
 change_period <- function(data, period = "monthly", aggregate_fn = NULL) {
 
-  period_map <- c(daily = "day", monthly = "month",
+  period_map <- c(monthly = "month",
                   quarterly = "quarter", yearly = "year")
   if (!is.character(period) || length(period) != 1 ||
       !(period %in% names(period_map))) {
