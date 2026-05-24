@@ -1,5 +1,11 @@
 # MISdata
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/MISDataGit/MISdata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MISDataGit/MISdata/actions/workflows/R-CMD-check.yaml)
+[![License: GPL (>= 3)](https://img.shields.io/badge/license-GPL%20(%3E%3D%203)-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
+
 End-to-end pipeline for stock market data analysis in R.
 
 ## Overview
