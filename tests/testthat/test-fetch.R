@@ -33,6 +33,13 @@ test_that("get_stock errors on invalid source", {
   )
 })
 
+test_that("get_stock requests all supported columns by default", {
+  expect_identical(
+    eval(formals(get_stock)$columns),
+    c("Open", "High", "Low", "Close", "Volume", "Adjusted")
+  )
+})
+
 test_that("get_index_components returns a data.frame (network)", {
   skip_on_cran()
   skip_if_offline()
@@ -45,9 +52,12 @@ test_that("get_index_components returns a data.frame (network)", {
 test_that("get_stock returns a long data.frame (network)", {
   skip_on_cran()
   skip_if_offline()
-  df <- get_stock("AAPL", start = "2024-01-01", end = "2024-01-31",
-                  columns = "Close")
+  df <- get_stock("AAPL", start = "2024-01-01", end = "2024-01-31")
   expect_s3_class(df, "data.frame")
   expect_true(all(c("Date", "Symbol", "Column", "Value") %in% colnames(df)))
+  expect_setequal(
+    unique(df$Column),
+    c("Open", "High", "Low", "Close", "Volume", "Adjusted")
+  )
   expect_gt(nrow(df), 0)
 })

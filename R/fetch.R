@@ -108,8 +108,9 @@ sample_symbols <- function(components, n = 3, seed = NULL) {
 #' @param symbols A character vector of stock ticker symbols.
 #' @param start A character string indicating the start date ("YYYY-MM-DD"). Default is "2020-01-01".
 #' @param end A character string or Date object indicating the end date. Default is \code{Sys.Date()}.
-#' @param columns A character vector specifying which columns to keep. Valid options: 
-#'   "Open", "High", "Low", "Close", "Volume", "Adjusted". Default is \code{c("Close")}.
+#' @param columns A character vector specifying which columns to keep. Valid options:
+#'   "Open", "High", "Low", "Close", "Volume", "Adjusted". Defaults to all
+#'   supported columns.
 #' @param source A character string specifying the data source. Either "yahoo" or "google". Default is "yahoo".
 #'
 #' @return A data.frame in long format with columns: \code{Date}, \code{Symbol}, \code{Column}, \code{Value}.
@@ -123,7 +124,12 @@ sample_symbols <- function(components, n = 3, seed = NULL) {
 #'   columns = c("Close", "Volume")
 #' )
 #' }
-get_stock <- function(symbols, start = "2020-01-01", end = Sys.Date(), columns = c("Close"), source = "yahoo") {
+get_stock <- function(
+    symbols,
+    start = "2020-01-01",
+    end = Sys.Date(),
+    columns = c("Open", "High", "Low", "Close", "Volume", "Adjusted"),
+    source = "yahoo") {
   
   # Validate and parse dates using stringr and anytime
   start_parsed <- stringr::str_trim(as.character(start)) |> anytime::anydate()

@@ -8,7 +8,7 @@ get_stock(
   symbols,
   start = "2020-01-01",
   end = Sys.Date(),
-  columns = c("Close"),
+  columns = c("Open", "High", "Low", "Close", "Volume", "Adjusted"),
   source = "yahoo"
 )
 }
@@ -20,7 +20,8 @@ get_stock(
 \item{end}{A character string or Date object indicating the end date. Default is \code{Sys.Date()}.}
 
 \item{columns}{A character vector specifying which columns to keep. Valid options:
-"Open", "High", "Low", "Close", "Volume", "Adjusted". Default is \code{c("Close")}.}
+"Open", "High", "Low", "Close", "Volume", "Adjusted". Defaults to all
+supported columns.}
 
 \item{source}{A character string specifying the data source. Either "yahoo" or "google". Default is "yahoo".}
 }

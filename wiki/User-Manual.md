@@ -179,10 +179,12 @@ prices <- get_stock(
   symbols = c("AAPL", "MSFT"),
   start = "2022-01-01",
   end = "2024-12-31",
-  columns = c("Open", "High", "Low", "Close", "Volume", "Adjusted"),
   source = "yahoo"
 )
 ```
+
+By default, all supported fields are returned: `Open`, `High`, `Low`, `Close`,
+`Volume`, and `Adjusted`. Pass `columns` explicitly to request a subset.
 
 ### Main arguments
 
@@ -191,7 +193,7 @@ prices <- get_stock(
 | `symbols` | Character vector of ticker symbols | Required |
 | `start` | First date in `YYYY-MM-DD` format | `"2020-01-01"` |
 | `end` | Last date in `YYYY-MM-DD` format | Current date |
-| `columns` | Market data fields to keep | `"Close"` |
+| `columns` | Market data fields to keep | All supported fields |
 | `source` | Data source: `"yahoo"` or `"google"` | `"yahoo"` |
 
 Yahoo Finance is the recommended default. Data-source availability and ticker
