@@ -23,6 +23,8 @@ test_that("change_period default OHLCV-aware: Open=first, Close=last, High=max, 
   expect_equal(agg_jan$Value[agg_jan$Column == "High"],   high_jan_raw)
   expect_equal(agg_jan$Value[agg_jan$Column == "Low"],    low_jan_raw)
   expect_equal(agg_jan$Value[agg_jan$Column == "Volume"], vol_jan_raw)
+  expect_false(anyNA(monthly$Value))
+  expect_true(all(is.finite(monthly$Value)))
 })
 
 test_that("change_period accepts user-supplied aggregate_fn (NA-aware wrapping)", {
@@ -39,6 +41,28 @@ test_that("change_period supports monthly/quarterly/yearly periods", {
     out <- change_period(d, period = p)
     expect_s3_class(out, "data.frame")
   }
+})
+
+test_that("change_period reaggregates monthly and quarterly OHLCV without padding", {
+  d <- make_long_df(
+    symbols = "AAA",
+    columns = c("Open", "High", "Low", "Close", "Volume"),
+    n_days = 800,
+    start = as.Date("2020-01-01")
+  )
+
+  yearly_direct <- change_period(d, period = "yearly")
+  monthly <- change_period(d, period = "monthly")
+  quarterly <- change_period(d, period = "quarterly")
+  yearly_from_monthly <- change_period(monthly, period = "yearly")
+  yearly_from_quarterly <- change_period(quarterly, period = "yearly")
+
+  expect_false(anyNA(yearly_from_monthly$Value))
+  expect_false(anyNA(yearly_from_quarterly$Value))
+  expect_true(all(is.finite(yearly_from_monthly$Value)))
+  expect_true(all(is.finite(yearly_from_quarterly$Value)))
+  expect_equal(yearly_from_monthly, yearly_direct)
+  expect_equal(yearly_from_quarterly, yearly_direct)
 })
 
 test_that("change_period errors on invalid period", {
