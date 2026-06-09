@@ -107,24 +107,21 @@ change_period <- function(data, period = "monthly", aggregate_fn = NULL) {
 
   # ---- aggregate ----
   if (!is.null(aggregate_fn)) {
-    # tsbox::ts_frequency regularizes daily series and injects NA for
-    # weekends/holidays; the built-in string aggregates and bare functions
-    # like mean() then collapse to an empty 0x0 matrix because any NA in
-    # the period contaminates the result. We wrap user-provided functions
-    # to strip NAs first so the call behaves as the caller expects.
+    # na.rm = TRUE prevents ts_frequency() from regularizing and padding the
+    # series with boundary NAs. Custom functions still need genuine NAs removed.
     if (is.function(aggregate_fn)) {
       user_fn <- aggregate_fn
       aggregate_fn <- function(z) user_fn(z[!is.na(z)])
     }
-    result <- tsbox::ts_frequency(x, to = tsbox_period, aggregate = aggregate_fn)
+    result <- tsbox::ts_frequency(
+      x, to = tsbox_period, aggregate = aggregate_fn, na.rm = TRUE
+    )
     if (!inherits(result, "xts")) {
       result <- tsbox::ts_xts(result)
     }
   } else {
-    # tsbox::ts_frequency regularizes the series first, which injects NA for
-    # weekends/holidays. We therefore use NA-aware functions for every
-    # aggregation (the built-in string aggregates "first"/"sum" would yield
-    # NA for any period whose first day is non-trading).
+    # Avoid ts_frequency() regularization so already-aggregated inputs are not
+    # padded with empty boundary periods before being aggregated again.
     first_non_na <- function(z) {
       z <- z[!is.na(z)]; if (length(z)) z[[1L]] else NA_real_
     }
@@ -133,11 +130,17 @@ change_period <- function(data, period = "monthly", aggregate_fn = NULL) {
     }
     ohlcv_map <- list(
       Open     = first_non_na,
-      High     = function(z) max(z, na.rm = TRUE),
-      Low      = function(z) min(z, na.rm = TRUE),
+      High     = function(z) {
+        z <- z[!is.na(z)]; if (length(z)) max(z) else NA_real_
+      },
+      Low      = function(z) {
+        z <- z[!is.na(z)]; if (length(z)) min(z) else NA_real_
+      },
       Close    = last_non_na,
       Adjusted = last_non_na,
-      Volume   = function(z) sum(z, na.rm = TRUE)
+      Volume   = function(z) {
+        z <- z[!is.na(z)]; if (length(z)) sum(z) else NA_real_
+      }
     )
     cols <- colnames(x)
     if (is.null(cols) || length(cols) == 0) {
@@ -154,12 +157,12 @@ change_period <- function(data, period = "monthly", aggregate_fn = NULL) {
       if (suffix %in% names(ohlcv_map)) {
         fn <- ohlcv_map[[suffix]]
       } else {
-        fn <- "last"
+        fn <- last_non_na
         unknown_cols <- c(unknown_cols, col)
       }
 
       agg_list[[col]] <- tsbox::ts_frequency(
-        x[, col], to = tsbox_period, aggregate = fn
+        x[, col], to = tsbox_period, aggregate = fn, na.rm = TRUE
       )
     }
 
