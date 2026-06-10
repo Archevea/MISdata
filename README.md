@@ -24,8 +24,7 @@ ARIMA-based forecasting with multi-level confidence bands.
   <img src="./MISdata_Image.jpeg" width="800">
 </p>
 
-This package was developed as part of an undergraduate project.
-It is not intended for CRAN submission but follows CRAN-compatible
+This package was developed as part of an undergraduate project and follows CRAN-compatible
 standards.
 
 ## Workflow
