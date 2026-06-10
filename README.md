@@ -21,7 +21,7 @@ exploratory analysis (line plots, ACF/PACF, STL decomposition), and
 ARIMA-based forecasting with multi-level confidence bands.
 
 <p align="center">
-  <img src="MISdata_Image.jpeg" width="800">
+  <img src="./MISdata_Image.jpeg" width="800">
 </p>
 
 This package was developed as part of an undergraduate project.
